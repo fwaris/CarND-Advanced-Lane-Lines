@@ -13,7 +13,7 @@ open Accord.Statistics.Models.Regression.Fitting
 open ILNumerics
 open ILNumerics.Toolboxes
 #nowarn "9"
-//sq
+//s
 
 open MathNet.Numerics
 open Accord.Statistics.Models.Regression.Linear
