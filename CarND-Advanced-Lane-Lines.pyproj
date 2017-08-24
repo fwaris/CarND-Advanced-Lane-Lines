@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{440d2e30-8d46-47bc-8338-c081853cf5f7}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>fw_camcalib.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>Global|VisualStudio|udtf</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="camera_cal\calibration1.jpg" />
+    <Content Include="camera_cal\calibration10.jpg" />
+    <Content Include="camera_cal\calibration11.jpg" />
+    <Content Include="camera_cal\calibration12.jpg" />
+    <Content Include="camera_cal\calibration13.jpg" />
+    <Content Include="camera_cal\calibration14.jpg" />
+    <Content Include="camera_cal\calibration15.jpg" />
+    <Content Include="camera_cal\calibration16.jpg" />
+    <Content Include="camera_cal\calibration17.jpg" />
+    <Content Include="camera_cal\calibration18.jpg" />
+    <Content Include="camera_cal\calibration19.jpg" />
+    <Content Include="camera_cal\calibration2.jpg" />
+    <Content Include="camera_cal\calibration20.jpg" />
+    <Content Include="camera_cal\calibration3.jpg" />
+    <Content Include="camera_cal\calibration4.jpg" />
+    <Content Include="camera_cal\calibration5.jpg" />
+    <Content Include="camera_cal\calibration6.jpg" />
+    <Content Include="camera_cal\calibration7.jpg" />
+    <Content Include="camera_cal\calibration8.jpg" />
+    <Content Include="camera_cal\calibration9.jpg" />
+    <Content Include="examples\binary_combo_example.jpg" />
+    <Content Include="examples\color_fit_lines.jpg" />
+    <Content Include="examples\example_output.jpg" />
+    <Content Include="examples\undistort_output.png" />
+    <Content Include="examples\warped_straight_lines.jpg" />
+    <Content Include="output_images\save_output_here.txt" />
+    <Content Include="test_images\straight_lines1.jpg" />
+    <Content Include="test_images\straight_lines2.jpg" />
+    <Content Include="test_images\test1.jpg" />
+    <Content Include="test_images\test2.jpg" />
+    <Content Include="test_images\test3.jpg" />
+    <Content Include="test_images\test4.jpg" />
+    <Content Include="test_images\test5.jpg" />
+    <Content Include="test_images\test6.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="examples\example.py" />
+    <Compile Include="windowing.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="fw_camcalib.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="camera_cal" />
+    <Folder Include="examples" />
+    <Folder Include="output_images" />
+    <Folder Include="test_images" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|VisualStudio|udtf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
