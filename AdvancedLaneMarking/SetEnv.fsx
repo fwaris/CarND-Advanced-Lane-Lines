@@ -18,20 +18,27 @@
 System.Environment.CurrentDirectory <- __SOURCE_DIRECTORY__ + @"..\..\packages\OpenCvSharp3-AnyCPU.3.2.0.20170419\NativeDlls\x86"
 #load "OpenCVCommon.fs"
 #load "CalibrateCamera.fs"
+#load "BaseTypes.fs"
+#load "Utils.fs"
+#load "ImageProc.fs"
+#load "LaneFind.fs"
+#load "LineFitting.fs"
+#load "VideoProcessing.fs"
+
 open FSharp.Charting
 fsi.AddPrinter(fun (ch:FSharp.Charting.ChartTypes.GenericChart) -> ch.ShowChart() |> ignore; "(Chart)")
 
-let uiCtx = System.Threading.SynchronizationContext.Current
-open OpenCvSharp
-open CalibrateCamera
-open System
-open System.IO
+//let uiCtx = System.Threading.SynchronizationContext.Current
+//open OpenCvSharp
+//open CalibrateCamera
+//open System
+//open System.IO
 
-//show image in an opencv window (background thread)
-let win t i = 
-    async{
-        do! Async.SwitchToContext uiCtx
-        new Window((t:string), WindowMode.AutoSize,i) |> ignore 
-        } |> Async.Start
+////show image in an opencv window (background thread)
+//let win t i = 
+//    async{
+//        do! Async.SwitchToContext uiCtx
+//        new Window((t:string), WindowMode.AutoSize,i) |> ignore 
+//        } |> Async.Start
 
 

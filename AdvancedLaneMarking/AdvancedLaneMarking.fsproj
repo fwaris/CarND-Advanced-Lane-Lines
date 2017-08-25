@@ -10,12 +10,13 @@
     <OutputType>Library</OutputType>
     <RootNamespace>AdvancedLaneMarking</RootNamespace>
     <AssemblyName>AdvancedLaneMarking</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>AdvancedLaneMarking</Name>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,12 @@
     <Content Include="packages.config" />
     <Compile Include="OpenCVCommon.fs" />
     <Compile Include="CalibrateCamera.fs" />
+    <Compile Include="Utils.fs" />
+    <Compile Include="BaseTypes.fs" />
+    <Compile Include="ImageProc.fs" />
+    <Compile Include="LaneFind.fs" />
+    <Compile Include="LineFitting.fs" />
+    <Compile Include="VideoProcessing.fs" />
     <Compile Include="OptimizableTh.fs" />
     <None Include="SetEnv.fsx" />
     <None Include="ThresholdBinary.fsx" />
@@ -94,9 +101,7 @@
     <Reference Include="FSharp.Charting">
       <HintPath>..\packages\FSharp.Charting.0.90.14\lib\net40\FSharp.Charting.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
-    </Reference>
+    <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="ILNumerics.Computing">
       <HintPath>..\packages\ILNumerics.4.8.0.0\lib\ILNumerics.Computing.dll</HintPath>
     </Reference>
