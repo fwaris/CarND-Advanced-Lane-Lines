@@ -31,19 +31,27 @@ let colorThreshold (p:VParms) (img:Mat) (gray:Mat) =
     Cv2.BitwiseAnd(!>tR, !>o, !> gray)
     [imB;imG;imR]|>List.iter(fun x -> x.Release())
 
+let colorThrldHSV (p:VParms) (img:Mat) (gray:Mat) =
+    use hsvMat = new Mat()
+    Cv2.CvtColor(!>img,!>hsvMat,ColorConversionCodes.BGR2HSV)
+    Cv2.InRange(!>hsvMat, Scalar(20., 100., 100.), Scalar(255., 255., 255.), !>gray)
+
 let gradientThreshold (p:VParms) (img:Mat) (gray:Mat) =
     use mutable tmp =  new Mat()
     Cv2.CvtColor(!>img, !> tmp, ColorConversionCodes.BGR2GRAY )
-    tmp <- tmp.Sobel( !> MatType.CV_64F,1,0)
+    tmp <- tmp.Sobel( !> MatType.CV_64F,1,0,p.sobelKernel)
     Cv2.ConvertScaleAbs(!>tmp, !> tmp)
     Cv2.InRange(!>tmp, Scalar(float p.grdThL),Scalar(float p.grdThU),!>gray)
 
 let thresholdFrame (p:VParms) (inP:Mat) (gray:Mat) =
     use m1 = new Mat()
     use m2 = new Mat()
-    colorThreshold p inP m1
+    //colorThreshold p inP m1
+    colorThrldHSV p inP m1
     gradientThreshold p inP m2
+    //Cv2.BitwiseAnd(!>m1,!>m2,!>gray)
     Cv2.BitwiseOr(!>m1,!>m2,!>gray)
+    //Utils.dmp1 m2
     
 let warpFrame (m:Mat) (inp:Mat) (gray:Mat) = Cv2.WarpPerspective(!>inp, !>gray, !>m, inp.Size())    
 let toGray (i:Mat) (o:Mat) = Cv2.CvtColor(!>i,!>o,ColorConversionCodes.BGR2GRAY)

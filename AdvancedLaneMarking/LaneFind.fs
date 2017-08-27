@@ -5,17 +5,18 @@ open OpenCVCommon
 
 let peaks (inp:Mat) = 
     let a = Array.zeroCreate inp.Width
-    for r in inp.Rows-1..-1..inp.Rows/2 do
+    let maxRow = float inp.Rows / 2.5 |> int
+    for r in inp.Rows-1..-1..maxRow do
         for c in 0..inp.Cols-1 do
             let v = inp.Get(r,c)
             if v > 0 then
                 a.[c] <- a.[c] + 1
     a
 
-let argmaxX (a:int[]) =
+let argmaxX (p:VParms) (a:int[]) =
     let maxG = 
         a 
-        |> Seq.windowed 20 
+        |> Seq.windowed p.argmaxWidth 
         |> Seq.mapi (fun i xs -> i,xs|> Seq.sum) 
         |> Seq.maxBy snd
     fst maxG

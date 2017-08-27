@@ -5,11 +5,12 @@ type VParms =
         nWindows        : int //9
         winMargin       : int // 100
         minpx           : int // 50
-        LINE_ST_TH      : int // 100 //px
-        TRANS_PB_TH     : int // 150 should be greater than LINE_ST_TH
-        clrThB          : int // 170
-        clrThG          : int // 170
-        clrThR          : int // 170
+        argmaxWidth     : int // 30
+        sobelKernel     : int //3
+        lineSmoothN     : int //3
+        clrThB          : int // 180
+        clrThG          : int // 180
+        clrThR          : int // 180
         grdThL          : int // 60
         grdThU          : int // 100
     }
@@ -17,13 +18,14 @@ type VParms =
     static member  Default =
         {
             nWindows        = 9
-            winMargin       =  100
-            minpx           =  50
-            LINE_ST_TH      =  50 //px
-            TRANS_PB_TH     =  100
-            clrThB          =  170
-            clrThG          =  170
-            clrThR          =  170
-            grdThL          =  60
-            grdThU          =  100
+            winMargin       = 100
+            minpx           = 50
+            sobelKernel     = 3
+            lineSmoothN     = 5
+            argmaxWidth     = 60 //30
+            clrThB          = 170//170
+            clrThG          = 170//170
+            clrThR          = 170//170
+            grdThL          = 25//60
+            grdThU          = 100
         }
