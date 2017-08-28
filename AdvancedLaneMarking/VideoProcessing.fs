@@ -102,10 +102,10 @@ let processFrame (p:VParms) (m:Mat) (minv:Mat) cH (inp:Mat) (outp:Mat) =
     //Cv2.FillConvexPoly((o2:Mat),pts, Scalar(50.,215.,50.)) //draw polygon
     Cv2.FillPoly((o2:Mat),[pts], Scalar(50.,215.,50.)) //draw polygon
     //win "o2" o2    
-    //Cv2.WarpPerspective(!>o2,!>o2,!>minv,o2.Size())    //unwrap
-    //Cv2.AddWeighted(!>inp,1.,!>o2,0.6,0.,!>outp)       //overlay on input
-    Cv2.CvtColor(!>warped, !> warped, ColorConversionCodes.GRAY2BGR )
-    Cv2.AddWeighted(!>warped,1.,!>o2,0.6,0.,!>outp)       //overlay on input
+    Cv2.WarpPerspective(!>o2,!>o2,!>minv,o2.Size())    //unwrap
+    Cv2.AddWeighted(!>inp,1.,!>o2,0.6,0.,!>outp)       //overlay on input
+    //Cv2.CvtColor(!>warped, !> warped, ColorConversionCodes.GRAY2BGR )
+    //Cv2.AddWeighted(!>warped,1.,!>o2,0.6,0.,!>outp)       //overlay on input
     Cv2.PutText(!>outp,(sprintf "Curvature %0.0f (M)" crvtr), Point(400.,100.), HersheyFonts.HersheyPlain,3.,Scalar(50.,250.,255.))
     Cv2.PutText(!>outp,(sprintf "Offset %0.1f (M)" offset), Point(400.,140.), HersheyFonts.HersheyPlain,3.,Scalar(50.,250.,255.))
     //Cv2.PutText(!>outp,(sprintf "L %0.2f" crvtrLeft), Point(400.,135.), HersheyFonts.HersheyPlain,3.,Scalar(50.,250.,255.))

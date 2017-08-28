@@ -11,9 +11,11 @@ type VParms =
         argmaxWidth     : int //         width in pixels over which lane edge is located
         sobelKernel     : int //         kernel size for sobel
         curveSmoothN    : int //         N for smoothing curvature
-        hsvHueTh        : int //         hsv thresholds hue
+        hsvHueThLo      : int //         hsv thresholds hue low
+        hsvHueThHi      : int //         hsv thresholds hue high
         hsvStrTh        : int //                        saturation
         hsvBrtTh        : int //                        brightness
+        whiteSnstvty    : int //         white color sensitivity
         grdThL          : int //         gradient cuttoff low
         grdThU          : int //         gradient cuttoff high
     }
@@ -22,13 +24,15 @@ type VParms =
         {
             nWindows        = 9
             winMargin       = 100
-            minpx           = 50
+            minpx           = 30
             sobelKernel     = 3
             curveSmoothN    = 3
             argmaxWidth     = 30
-            hsvHueTh          = 20
-            hsvStrTh          = 85
-            hsvBrtTh          = 85
-            grdThL          = 40
+            hsvHueThLo      = 20
+            hsvHueThHi      = 35
+            hsvStrTh        = 85
+            hsvBrtTh        = 90
+            whiteSnstvty    = 20
+            grdThL          = 35
             grdThU          = 100
         }

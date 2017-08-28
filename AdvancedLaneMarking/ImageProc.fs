@@ -17,11 +17,16 @@ let getTransform() =
 //threshold image using hsv
 let colorThrldHSV (p:VParms) (img:Mat) (gray:Mat) =
     use hsvMat = new Mat()
+    use yellowMask = new Mat()
+    use whiteMask  = new Mat()
     Cv2.CvtColor(!>img,!>hsvMat,ColorConversionCodes.BGR2HSV)
     Cv2.InRange(!>hsvMat, 
-                Scalar(float p.hsvHueTh, float p.hsvStrTh, float p.hsvBrtTh), 
-                Scalar(180., 255., 255.), !>gray)
-    //Cv2.InRange(!>hsvMat, Scalar(20., 85., 85.), Scalar(255., 255., 255.), !>gray)
+                Scalar(float p.hsvHueThLo, float p.hsvStrTh, float p.hsvBrtTh), 
+                Scalar(float p.hsvHueThHi, 255., 255.), !>yellowMask)
+    Cv2.InRange(!>hsvMat, 
+                Scalar(0., 0., 255. - float p.whiteSnstvty), 
+                Scalar(180.,float p.whiteSnstvty, 255.), !>whiteMask)
+    Cv2.BitwiseOr(!>yellowMask,!>whiteMask,!>gray)
 
 //threshold image for sobel gradients
 let gradientThreshold (p:VParms) (img:Mat) (gray:Mat) =
@@ -38,6 +43,14 @@ let thresholdFrame (p:VParms) (inP:Mat) (gray:Mat) =
     colorThrldHSV p inP m1
     gradientThreshold p inP m2
     Cv2.BitwiseOr(!>m1,!>m2,!>gray) //merge thresholds
+
+//apply all thresholds to image (hsv and sobel gradient)
+let thresholdFrameAnd (p:VParms) (inP:Mat) (gray:Mat) =
+    use m1 = new Mat()
+    use m2 = new Mat()
+    colorThrldHSV p inP m1
+    gradientThreshold p inP m2
+    Cv2.BitwiseAnd(!>m1,!>m2,!>gray) //merge thresholds
     
 let warpFrame (m:Mat) (inp:Mat) (gray:Mat) = Cv2.WarpPerspective(!>inp, !>gray, !>m, inp.Size())    
 
@@ -45,5 +58,6 @@ let warpFrame (m:Mat) (inp:Mat) (gray:Mat) = Cv2.WarpPerspective(!>inp, !>gray, 
 let transformFrame (p:VParms) (m:Mat) (inp:Mat) (gray:Mat) =
     use t = new Mat()
     thresholdFrame p inp t
+    //thresholdFrameAnd p inp t
     warpFrame m t gray
 

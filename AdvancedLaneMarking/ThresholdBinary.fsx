@@ -54,3 +54,59 @@ let expFrameV() =
     let cH = processFrame p m minv [] i out
     win "outv" out
 
+let colorTh() =
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    let i = Cv2.ImRead(i_path)
+    let out = new Mat()
+    ImageProc.colorThrldHSV p i out 
+    let outFn = append2Name i_path "_clr_threshold"
+    out.SaveImage(outFn)
+
+let gradTh() =
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    let i = Cv2.ImRead(i_path)
+    let out = new Mat()
+    ImageProc.gradientThreshold p i out 
+    let outFn = append2Name i_path "_grd_threshold"
+    out.SaveImage(outFn)
+
+let allTh() = 
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    let i = Cv2.ImRead(i_path)
+    let out = new Mat()
+    ImageProc.thresholdFrameAnd p i out 
+    let outFn = append2Name i_path "_all_threshold"
+    out.SaveImage(outFn)
+
+let thTest() =
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    use clipIn = new VideoCapture(v_prjct)
+    let r = ref 0
+    let folder = @"D:\repodata\adv_lane_find\test_th"
+    if Directory.Exists folder |> not then Directory.CreateDirectory folder |> ignore
+    while clipIn.Grab() do
+        try
+            let m = clipIn.RetrieveMat()
+            let outp = new Mat()
+            ImageProc.thresholdFrame p m outp
+            //ImageProc.thresholdFrameAnd p m outp
+            let fn = Path.Combine(folder,sprintf "th%d.jpg" !r)
+            outp.SaveImage(fn) |> ignore
+            r := !r + 1
+            printfn "th %d" !r
+            m.Release()
+            outp.Release()
+        with ex ->
+            printfn "frame miss %d %s" !r ex.Message
+    clipIn.Release()
+    
+
+
