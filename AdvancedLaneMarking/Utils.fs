@@ -33,6 +33,20 @@ let dumpImageProject v_file frameIdx =
     )
     clipIn.Release()
 
+let dumpImageProjectAll v_file  = 
+    use clipIn = new VideoCapture(v_file:string)
+    let (w,h) = clipIn.FrameWidth,clipIn.FrameHeight
+    let fldr = Path.GetDirectoryName(v_file) + "/imgs"
+    if Directory.Exists fldr |> not then Directory.CreateDirectory fldr |> ignore
+    let r = ref 0
+    while clipIn.Grab() do
+        let m = clipIn.RetrieveMat()
+        let file = Path.Combine(fldr,sprintf "img%d.jpg" !r)
+        m.SaveImage(file) |> ignore
+        r := !r + 1
+        m.Release()
+    clipIn.Release()
+
 let dmp2 (m:Mat) =
     for r in 0..m.Rows-1 do
         for c in 0..m.Cols-1 do

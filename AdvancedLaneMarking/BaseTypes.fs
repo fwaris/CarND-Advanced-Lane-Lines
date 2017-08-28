@@ -1,31 +1,34 @@
 ﻿module BaseTypes
 
+// a data structure that encapsulates
+// hyperparameters for easier (automated) tuning
+// of hyperparameters, if need be
 type VParms =
     {
-        nWindows        : int //9
-        winMargin       : int // 100
-        minpx           : int // 50
-        argmaxWidth     : int // 30
-        sobelKernel     : int //3
-        lineSmoothN     : int //3
-        clrThB          : int // 180
-        clrThG          : int // 180
-        clrThR          : int // 180
-        grdThL          : int // 60
-        grdThU          : int // 100
+        nWindows        : int //         number of windows
+        winMargin       : int //         window margin
+        minpx           : int //         min pixels for window recentering
+        argmaxWidth     : int //         width in pixels over which lane edge is located
+        sobelKernel     : int //         kernel size for sobel
+        curveSmoothN    : int //         N for smoothing curvature
+        hsvHueTh        : int //         hsv thresholds hue
+        hsvStrTh        : int //                        saturation
+        hsvBrtTh        : int //                        brightness
+        grdThL          : int //         gradient cuttoff low
+        grdThU          : int //         gradient cuttoff high
     }
     with
-    static member  Default =
+    static member  Default =         //values assigned to hyperparamemeters for this project
         {
             nWindows        = 9
             winMargin       = 100
             minpx           = 50
             sobelKernel     = 3
-            lineSmoothN     = 5
-            argmaxWidth     = 60 //30
-            clrThB          = 170//170
-            clrThG          = 170//170
-            clrThR          = 170//170
-            grdThL          = 25//60
+            curveSmoothN    = 3
+            argmaxWidth     = 30
+            hsvHueTh          = 20
+            hsvStrTh          = 85
+            hsvBrtTh          = 85
+            grdThL          = 40
             grdThU          = 100
         }

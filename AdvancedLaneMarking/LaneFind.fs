@@ -3,6 +3,8 @@ open BaseTypes
 open OpenCvSharp
 open OpenCVCommon
 
+// find number of pixels at each column of the frame
+//use on the bottom part
 let peaks (inp:Mat) = 
     let a = Array.zeroCreate inp.Width
     let maxRow = float inp.Rows / 2.5 |> int
@@ -13,21 +15,18 @@ let peaks (inp:Mat) =
                 a.[c] <- a.[c] + 1
     a
 
+//find center of a peak by taking into 
+//account the surrounding pixels as well
+//uses sliding window of width argmaxWidth hyperparameter
 let argmaxX (p:VParms) (a:int[]) =
     let maxG = 
         a 
-        |> Seq.windowed p.argmaxWidth 
+        |> Seq.windowed p.argmaxWidth               //sliding window of width p.argmaxWidth
         |> Seq.mapi (fun i xs -> i,xs|> Seq.sum) 
         |> Seq.maxBy snd
     fst maxG
-    //use aI = InputArray.Create(a)
-    //let mutable minVal = 0.
-    //let mutable maxVal = 0.
-    //let mutable minIdx = 0
-    //let mutable maxIdx = 0
-    //Cv2.MinMaxIdx(aI, &minVal, &maxVal, &minIdx, &maxIdx)
-    //maxIdx
 
+//construct a rectangle
 let makeRect center (size:Size) margin bottom  winHeight =
     let x = center - margin |> max 0 |> min (size.Width-1)
     let y = bottom - winHeight |> max 0 |> min (size.Height-1)
@@ -36,6 +35,8 @@ let makeRect center (size:Size) margin bottom  winHeight =
     let h = winHeight |> min (size.Height - y)            
     Rect(x,y,w,h)
 
+//return a list of points from a Mat 
+//which are inside the given rectangle
 let toPointList (inp:Mat) (offsetRect:Rect) =
     [
         for r in 0..inp.Rows-1 do
@@ -49,7 +50,9 @@ let recenterWindow (p:VParms) (img:Mat) (r:Rect) =
     use w = img.[r]
     use nz = w.FindNonZero()          //nonzero pixels
     if nz.Height >  p.minpx then
-        let xs = [for r in 0..nz.Rows-1 -> let v = nz.Get<Vec2i>(r,0) in v.Item0 |> float] //x indexes of non zero pixels
+        let xs = [for r in 0..nz.Rows-1 ->          //x indexes of non zero pixels
+                    let v = nz.Get<Vec2i>(r,0)
+                    v.Item0 |> float] 
         let newCtr = xs |> List.average |> int // mean of xs
         let prevCtr = r.Width/2
         let shift = newCtr - prevCtr

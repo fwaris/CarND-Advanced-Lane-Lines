@@ -66,7 +66,6 @@
     <Compile Include="LaneFind.fs" />
     <Compile Include="LineFitting.fs" />
     <Compile Include="VideoProcessing.fs" />
-    <Compile Include="OptimizableTh.fs" />
     <None Include="SetEnv.fsx" />
     <None Include="ThresholdBinary.fsx" />
     <None Include="bin64\mkl_custom.dll">

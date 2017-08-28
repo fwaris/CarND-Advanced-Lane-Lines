@@ -5,28 +5,30 @@ open MathNet.Numerics
 open System
 open BaseTypes
 
-type Line = QuadTrns  of c:float*b:float*a:float 
+//structure to hold line equation for hyperbola
+// (x and y axis are swapped for most processing)
+type Line = Hyperbola  of c:float*b:float*a:float 
 
-let linePoints sz  (QuadTrns(c,b,a)) =
-    [for i in  0..sz -> let y = float i in c + b * y + a * (y**2.), y]
+//generate a list of points from line equation
+let linePoints sz  (Hyperbola(c,b,a)) =
+    [for i in  0..sz -> let y = float i in c + b * y + a * (y**2.), y] //x,y swapped
     |> List.map Point
 
-let lineVertex (c,b,a) = 
-    let x = -b/(2.*a)
-    let y = c + b*x + a*(x**2.0)
-    Point(x,y)
-
+//fit a hyperbola to points
 let fitLine (pts:Point seq) =
     let xs,ys = splitPoints pts
     let m =  LinearRegression.DirectRegressionMethod.NormalEquations
     let ps = Fit.Polynomial(ys,xs,2,m)
     let c,b,a = ps.[0],ps.[1],ps.[2]
-    QuadTrns (c,b,a)
+    Hyperbola (c,b,a)
 
 let Hm_per_pix = 30./720. //meters per pixel in y dimension
 let Wm_per_pix = 3.7/700. //meters per pixel in x dimension
 
-let toWorldLine sz (QuadTrns(c,b,a)) =
+//convert a line equation in pixel units to world units in meters 
+//y is flipped so 0 is at bottom 
+//(note y here is really swapped x)
+let toWorldLine sz (Hyperbola(c,b,a)) =
     let worldPts = 
         [for i in  0..sz -> let x = float i in x,c + b * x + a * (x**2.)]
         |> List.map (fun (tX,tY) -> (float sz) - tX, tY) //from top down to bottom up
@@ -36,23 +38,15 @@ let toWorldLine sz (QuadTrns(c,b,a)) =
     let m =  LinearRegression.DirectRegressionMethod.NormalEquations
     let ps = Fit.Polynomial(xs,ys,2,m)
     let c,b,a = ps.[0],ps.[1],ps.[2]
-    QuadTrns (c,b,a)
+    Hyperbola (c,b,a)
 
-let curvature maxH (QuadTrns(c,b,a)) = 
-    let x = float maxH
-    let y = c //+ b * x + a * (x**2.)
+//given a hyperbola equation find curvature at bottom x=0
+let curvatureAtBottom (Hyperbola(c,b,a)) = 
+    //x is zero at the bottom for this evaluation
+    //as the points have been flipped top down
+    let y = c //+ b * x + a * (x**2.) 
     //y_eval = np.max(ploty)
     let c = ((1. + (2.*a*0. + b)**2.)**1.5) / abs (2.0 * a)
-    c
-    //left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
-    //right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
-    //print(left_curverad, right_curverad)
-
-let curvatureOld maxH (QuadTrns(c,b,a)) = 
-    let x = float maxH
-    let y = c + b * x + a * (x**2.)
-    //y_eval = np.max(ploty)
-    let c = ((1. + (2.*a*x + b)**2.)**1.5) / abs (2.0 * a)
     c
     //left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
     //right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
