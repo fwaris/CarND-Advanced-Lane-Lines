@@ -7,6 +7,7 @@ let folder = @"D:\Repos\CarND-Advanced-Lane-Lines\camera_cal"
 let sqaure_size = 120 //(1280-60)/10
 let p_width = 9
 let p_height = 6
+let patternSize = p_width @ p_height
 
 let objectPoints = 
     seq{ 
@@ -22,7 +23,7 @@ let isCalibrationFile (s:string) =
 
 let calibrtionFiles() = Directory.GetFiles(folder) |> Array.filter isCalibrationFile
 
-let calibrateCamera(folder,pattern:Size,objp:Point3f[]) =
+let calibrateCamera(folder,patternSize:Size,objectPoints:Point3f[]) =
     let files = calibrtionFiles()
     use temp = Cv2.ImRead(files.[0])
     let objpts,imgpts = 
@@ -32,9 +33,9 @@ let calibrateCamera(folder,pattern:Size,objp:Point3f[]) =
             use g = new Mat()
             Cv2.CvtColor(!>m,!>g,ColorConversionCodes.BGR2GRAY)
             let mutable cnrns:Point2f[] = null
-            let r = Cv2.FindChessboardCorners(!>g, pattern, &cnrns)
+            let r = Cv2.FindChessboardCorners(!>g, patternSize, &cnrns)
             if r then
-                objp::ops, cnrns::ips
+                objectPoints::ops, cnrns::ips
             else
                 printfn "no read for %s" f
                 ops,ips
@@ -63,14 +64,14 @@ let findCBC() =
     i.SaveImage(fn)
     //Utils.win "i" i
     
-
+let undistort() =
+    let mtx,dist = calibrateCamera(folder, p_width @ p_height, objectPoints)
+    let t1 = Cv2.ImRead(folder + "/calibration1.jpg")
+    let u1 = new Mat()
+    Cv2.Undistort(!> t1, !> u1, mtx, dist)
+    u1.SaveImage(folder + "/undist.jpg")
+    //Utils.win "t1" t1
+    //Utils.win "undist" u1
 (*
-let mtx,dist = calibrateCamera(folder, p_width @ p_height, objectPoints)
-let t1 = Cv2.ImRead(folder + "/calibration1.jpg")
-let u1 = new Mat()
-Cv2.Undistort(!> t1, !> u1,  mtx,dist)
-u1.SaveImage(folder + "/undist.jpg")
-win "t1" t1
-win "undist" u1
 *)
 
