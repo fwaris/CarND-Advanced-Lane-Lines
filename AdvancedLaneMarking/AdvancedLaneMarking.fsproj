@@ -59,8 +59,8 @@
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <Compile Include="OpenCVCommon.fs" />
-    <Compile Include="CalibrateCamera.fs" />
     <Compile Include="Utils.fs" />
+    <Compile Include="CalibrateCamera.fs" />
     <Compile Include="BaseTypes.fs" />
     <Compile Include="ImageProc.fs" />
     <Compile Include="LaneFind.fs" />

@@ -39,7 +39,9 @@ let expFrame() =
     let i = Cv2.ImRead(i_path)
     let out = new Mat()
     let cH = processFrame p m minv [] i out
-    win i_path out
+    let fnout = append2Name i_path "_lanes"
+    out.SaveImage(fnout) |> ignore
+    //win i_path out
     ()
 
 let expFrameV() = 
@@ -72,6 +74,26 @@ let gradTh() =
     let out = new Mat()
     ImageProc.gradientThreshold p i out 
     let outFn = append2Name i_path "_grd_threshold"
+    out.SaveImage(outFn)
+
+let persTxOrig() =
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    let i = Cv2.ImRead(i_path)
+    let out = new Mat()
+    ImageProc.warpFrame m i out 
+    let outFn = append2Name i_path "_warped"
+    out.SaveImage(outFn)
+
+let persTxTh() =
+    let p = VParms.Default
+    let m = getTransform()
+    let minv = m.Inv()
+    let i = Cv2.ImRead(i_path)
+    let out = new Mat()
+    ImageProc.transformFrame p m i out
+    let outFn = append2Name i_path "_warped_th"
     out.SaveImage(outFn)
 
 let allTh() = 
