@@ -42,15 +42,19 @@ let calibrateCamera(folder,patternSize:Size,objectPoints:Point3f[]) =
             )    
     let size = temp.Size()
     let mutable mtx:float[,] = Array2D.zeroCreate 3 3
-    let mutable dist:float[] = Array.zeroCreate 8
+    let mutable dist:float[] = Array.zeroCreate 5
     let mutable rvecs:Vec3d[] = null
     let mutable tvecs:Vec3d[] = null
     let seqObj = seq{for p in objpts -> Array.toSeq p}
     let seqImg = seq{for i in imgpts -> Array.toSeq i}
     let m = Cv2.CalibrateCamera(seqObj,seqImg,size, mtx, dist, &rvecs, &tvecs)
-    let mtxA  = InputArray.Create(mtx,!>MatType.CV_64F)
-    let distA = InputArray.Create(dist, !> MatType.CV_64F)
+    //let mtxA  = InputArray.Create(mtx,!>MatType.CV_64F)
+    //let distA = InputArray.Create(dist, !> MatType.CV_64F)
+    let mtxA = new Mat(3,3,!>MatType.CV_64F,mtx)
+    let distA = new Mat(8,1,!>MatType.CV_64F, dist)
     mtxA,distA
+
+let calibrateCameraUsingDefaults() = calibrateCamera(folder, patternSize, objectPoints)
 
 let findCBC() =
     let files = calibrtionFiles()
@@ -63,12 +67,15 @@ let findCBC() =
     let fn = folder + "/drawncb.jpg"
     i.SaveImage(fn)
     //Utils.win "i" i
+
+let undistort (cameraMatrix:Mat) (distortionCfnts:Mat) (inp:Mat) (out:Mat) =
+    Cv2.Undistort(!> inp, !> out, !> cameraMatrix, !>distortionCfnts,!>cameraMatrix)
     
-let undistort() =
+let undistortTest() =
     let mtx,dist = calibrateCamera(folder, p_width @ p_height, objectPoints)
     let t1 = Cv2.ImRead(folder + "/calibration1.jpg")
     let u1 = new Mat()
-    Cv2.Undistort(!> t1, !> u1, mtx, dist)
+    Cv2.Undistort(!> t1, !> u1, !> mtx, !>dist,!>mtx)
     u1.SaveImage(folder + "/undist.jpg")
     //Utils.win "t1" t1
     //Utils.win "undist" u1

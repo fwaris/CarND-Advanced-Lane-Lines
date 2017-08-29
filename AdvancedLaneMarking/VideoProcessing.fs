@@ -81,10 +81,12 @@ let offsetFromCenter (sz:Size) leftPos rightPos =
     offSetMeters //return offset in meters
  
 //process video frame given in inp and put the results in outp
-let processFrame (p:VParms) (m:Mat) (minv:Mat) cH (inp:Mat) (outp:Mat) = 
+let processFrame (p:VParms) undistortF (m:Mat) (minv:Mat) cH (inp:Mat) (outp:Mat) = 
     let sz = inp.Size()
+    use calibrated = new Mat()
+    undistortF inp calibrated                               //undistort frame
     use warped = new Mat()
-    transformFrame p m inp warped                     //threshold and warp frame 
+    transformFrame p m calibrated warped                     //threshold and warp frame 
     //win "warped" warped
     let lineLeft,leftEdgePos,lineRight,rightEdgePos = findLines p warped      //find lines
     let lpx = linePoints (warped.Width-1) lineLeft   //generate points from equations
@@ -118,6 +120,8 @@ let processFrame (p:VParms) (m:Mat) (minv:Mat) cH (inp:Mat) (outp:Mat) =
 let findLanes (p:VParms) videoFile =
     let maskDir = Path.GetDirectoryName(videoFile) + "/masked"
     if Directory.Exists maskDir |> not then Directory.CreateDirectory maskDir |> ignore
+    let camMatrix,distCoeff = CalibrateCamera.calibrateCameraUsingDefaults()
+    let undistort = CalibrateCamera.undistort camMatrix distCoeff
     let outTemplate = maskDir + "/o.jpg"
     let m = getTransform()
     let minv = m.Inv()
@@ -135,7 +139,7 @@ let findLanes (p:VParms) videoFile =
         let outp = new Mat()
         printfn "%d" !r
         try 
-            let cH = processFrame p m minv curvatureHist inp outp
+            let cH = processFrame p undistort m minv curvatureHist inp outp
             curvatureHist <- cH
             outp.SaveImage(append2Name outTemplate (string !r)) |> ignore
         with ex -> 
@@ -145,4 +149,5 @@ let findLanes (p:VParms) videoFile =
         clipOut.Write(outp)
         inp.Release()
         outp.Release()
-
+    camMatrix.Release()
+    distCoeff.Release()

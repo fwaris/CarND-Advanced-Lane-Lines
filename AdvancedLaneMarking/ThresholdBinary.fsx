@@ -32,13 +32,17 @@ let imageDumps() =
 
 let i_path = @"D:\repodata\adv_lane_find\imgs\img2.jpg"
 
+let createUndist() = 
+    let m,d = calibrateCameraUsingDefaults()
+    undistort m d
+
 let expFrame() = 
     let p = VParms.Default
     let m = getTransform()
     let minv = m.Inv()
     let i = Cv2.ImRead(i_path)
     let out = new Mat()
-    let cH = processFrame p m minv [] i out
+    let cH = processFrame p (createUndist())  m minv [] i out
     let fnout = append2Name i_path "_lanes"
     out.SaveImage(fnout) |> ignore
     //win i_path out
@@ -53,7 +57,7 @@ let expFrameV() =
     while !r <= 2  &&  clipIn.Grab()do  r := !r + 1; printfn "r=%d" !r
     let i = clipIn.RetrieveMat()
     let out = new Mat()
-    let cH = processFrame p m minv [] i out
+    let cH = processFrame p (createUndist())  m minv [] i out
     win "outv" out
 
 let colorTh() =
